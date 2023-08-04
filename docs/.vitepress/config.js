@@ -30,7 +30,7 @@ export default defineConfig({
         algolia: {
             appId: 'BIYTGOKM5C', // 需要替换
             apiKey: '30771f89d8c8d2ef8bffcaa26c1d921e', // 需要替换
-            indexName: 'blog', // 需要替换
+            indexName: 'MyApplication', // 需要替换
             placeholder: '请输入关键词',
             buttonText: '搜索'
         }

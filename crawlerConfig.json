@@ -1,5 +1,5 @@
 {
-    "index_name": "blog", // 填写自己的索引名称
+    "index_name": "MyApplication", // 填写自己的索引名称
     "start_urls": ["https://blog-1790.vercel.app/"], // 填写自己的网站地址
     "rateLimit": 8,
     "maxDepth": 10,
