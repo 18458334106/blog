@@ -17,7 +17,6 @@ features:
 footer:
   - text: 19857191790
 ---
-
 <style>
   .VPHero .container .main .name,
   .VPHero .container .main .text,

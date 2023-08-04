@@ -26,6 +26,13 @@ export default defineConfig({
         sidebar:sidebar,
         footer: {
             message: '某公司摸鱼前端'
-        }
+        },
+        algolia: {
+            appId: 'GBAS9WWDFX', // 需要替换
+            apiKey: 'f007d55319778299b77c21f422fbb4e8', // 需要替换
+            indexName: 'MyBlogWebsite', // 需要替换
+            placeholder: '请输入关键词',
+            buttonText: '搜索',
+        }  
     }
 })
