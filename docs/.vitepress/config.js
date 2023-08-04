@@ -28,9 +28,9 @@ export default defineConfig({
             message: '某公司摸鱼前端'
         },
         algolia: {
-            appId: 'GBAS9WWDFX', // 需要替换
-            apiKey: 'f007d55319778299b77c21f422fbb4e8', // 需要替换
-            indexName: 'MyBlogWebSite', // 需要替换
+            appId: 'BIYTGOKM5C', // 需要替换
+            apiKey: '30771f89d8c8d2ef8bffcaa26c1d921e', // 需要替换
+            indexName: 'blog', // 需要替换
             placeholder: '请输入关键词',
             buttonText: '搜索'
         }
