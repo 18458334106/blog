@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+  
 jobs:
   algolia:
     runs-on: ubuntu-latest
