@@ -1,4 +1,5 @@
 ---
+issueId: 1
 layout: home
 hero:
   name: 我将在这里分享我的经验
