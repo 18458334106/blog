@@ -7,24 +7,22 @@ hero:
   actions: 
     - text: Look My Experience
       link: /experience/
-  image:
-    alt: 某公司摸鱼前端
-    src: /images/hero-img.jpg
-
 features:
   - title: MobilePhone
     details: "19857191790"
   - title: WeChat
     details: "1985791790"
   - title: WeChatMiniProgram
-    details: 正在尝试插入图片
+    details: 我正在尝试插入图片
+footer:
+  - text: 19857191790
 ---
 
 <style>
-  .VPHero .container .image .image-container{
-    transform: unset;
-  }
-  .VPHero .container .image .image-container img{
-    height:100%;
+  .VPHero .container .main .name,
+  .VPHero .container .main .text,
+  .VPHero .container .main .tagline{
+    max-width: unset;
+    width: 100%;
   }
 </style>

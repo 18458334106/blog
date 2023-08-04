@@ -11,7 +11,6 @@ const sidebar = {
     ]
 }
 
-
 export default defineConfig({
     title: '某公司摸鱼前端的Blog',
     description: '某公司摸鱼前端的Blog',
@@ -22,8 +21,11 @@ export default defineConfig({
             {text:'About',link:'/about'},
             {text:'Gitee',link:'https://gitee.com/zhaojc-077399'},
             {text:'GitHub',link:'https://github.com/19857191790/blog'},
-            {text:'CSDN',link:'https://blog.csdn.net/weixin_59685936?type=blog'},
+            {text:'CSDN',link:'https://blog.csdn.net/weixin_59685936?type=blog'}
         ],
-        sidebar:sidebar
+        sidebar:sidebar,
+        footer: {
+            message: '某公司摸鱼前端'
+        }
     }
 })
