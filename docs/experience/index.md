@@ -1,8 +1,7 @@
-# exper
-    {text:'Experience',link:'/experience/'},
-    {text:'Experience',link:'/experience/'},
-    {text:'Experience',link:'/experience/'},
-    {text:'Experience',link:'/experience/'},
-    {text:'Experience',link:'/experience/'},
-    {text:'Experience',link:'/experience/'},
-    {text:'Experience',link:'/experience/'},
+[前端](/experience/frontEnd/frontEnd)
+
+[后端](/experience/backEnd/backEnd)
+
+[小程序](/experience/miniapp/miniapp)
+
+[git](/experience/git/git)

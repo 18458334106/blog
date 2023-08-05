@@ -1,11 +1,31 @@
 import { defineConfig } from "vitepress";
-
 const sidebar = {
     '/experience/': [
         {
             text: 'Experience',
             items: [
-                { text: 'One', link: '/experience/' },
+                {
+                    text: '分类',
+                    link: '/experience/',
+                    items: [
+                        {
+                            text: '前端',
+                            link: '/experience/frontEnd/frontEnd'
+                        },
+                        {
+                            text: '后端',
+                            link: '/experience/backEnd/backEnd'
+                        },
+                        {
+                            text: '小程序',
+                            link: '/experience/miniapp/miniapp'
+                        },
+                        {
+                            text: 'git',
+                            link: '/experience/git/git'
+                        }
+                    ]
+                },
             ]
         }
     ]
@@ -33,6 +53,9 @@ export default defineConfig({
             indexName: 'MyApplication', // 需要替换
             placeholder: '请输入关键词',
             buttonText: '搜索'
-        }
+        },
+        aside:true,
+        outline:'deep',
+        outlineTitle:"In Thie Page"
     }
 })
