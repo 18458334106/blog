@@ -1,3 +1,35 @@
+## macOS安装git
+打开macOS终端  将下面的命令复制粘贴进去：
+```
+curl -O https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.41.0.tar.gz
+```
+版本号可以参考一下官网的  我这里安装的是目前最新的2.41.0
+然后在终端输入下面的代码或者双击git的压缩包进行解压缩：
+```
+tar -zxf git-2.33.0.tar.gz
+```
+然后依次输入并执行以下命令：
+```
+cd git-2.33.0
+ 
+make prefix=/usr/local/git all
+ 
+sudo make prefix=/usr/local/git install
+```
+接着配置一下git的环境变量，依次输入执行下面的命令：
+```
+echo 'export PATH=/usr/local/git/bin:$PATH' >> ~/.bash_profile
+ 
+source ~/.bash_profile
+```
+最后，验证是否安装成功。在终端中输入以下命令：
+```
+git --version
+```
+如果显示如下信息，则说明Git已经成功安装：
+```
+git version 2.39.2 (Apple Git-143)
+```
 ## git因网络问题报错【已失效】
 1.Failed to connect to github.com port 443 after 21051 ms: Couldn't connect to server
 

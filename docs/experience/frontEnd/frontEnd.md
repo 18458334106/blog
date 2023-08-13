@@ -1,3 +1,54 @@
+## macOS 安装nvm方法【nvm/node】
+从github下载nvm仓库到 ~/目录  地址：https://github.com/nvm-sh/nvm.git 
+或者直接去该地址下载nvm的包
+```js
+git clone https://github.com/nvm-sh/nvm.git
+```
+通过终端进入 nvm目录中执行install.sh 等待执行完成，执行的操作方法就是直接将文件拖入终端然后回车。
+【如果你是直接去网站下载的压缩包需要先解压缩一下】
+配置环境变量：【一样还是在终端去执行】
+```js
+export NVM_DIR="$HOME/.nvm"
+ 
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 
+ 
+ # This loads nvm
+ 
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+ 
+# This loads nvm bash_completio
+```
+如果没有配置环境变量，要先配置环境变量 ，配置环境变量的方法：
+```
+1.在终端输入  touch ~/.bash_profile
+ 
+2.在终端输入  source ~/.bash_profile
+ 
+3.在终端输入  . ~/.nvm/nvm.sh
+ 
+4.打开环境变量文件的方法  open ~/.bash_profile
+```
+配置完毕后执行以下代码：
+```
+source  ~/.bash_profile
+```
+执行nvm --version是否可以正常输出，若不行则重启终端再次尝试
+
+nvm操作
+
+   ①：使用  nvm install  node版本号  也可直接输入nvm install node 最新版本
+
+   ②：使用 nvm list  或  nvm ls  可查看当前安装的node版本            
+
+   ③：使用 nvm use node版本 可以切换当前使用的node
+
+   ④：使用 nvm alias default node版本  可以指定默认打开终端时的node版本
+
+tips：如果使用npm提示键未找到，在项目里运行一下以下命令：
+```
+nvm use 20.3.1
+```
+但是情况不同不一定有用
 ## 前端使用authcode.js字符串加密解密[javascript/authcode.js]
 上代码
 ```js
