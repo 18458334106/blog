@@ -1,3 +1,179 @@
+## 微信小程序仿高德地图首页面板上下滑动效果[微信小程序]
+
+.wxml部分代码
+```vue
+<view class="container">
+    <map class="map"
+          longitude="120.22096505715056"
+          latitude="30.257772854411684"
+          markers="{{markers}}"
+          enable-zoom="{{false}}"
+          bindtap="tapMap" 
+          style="height: {{100 - height}}vh;"/>
+    <view class="panel" style="height: {{height}}vh;" 
+        capture-bind:touchstart="touchStart" 
+        capture-bind:touchend="touchEnd" 
+        capture-bind:touchcancel="touchCancel">
+        <view class="searchBox" style="padding: 32rpx;">
+          <view class="search flex-row">
+              <van-icon name="search" size="20" />
+              <input type="text" placeholder="搜索医院"/>
+          </view>
+        </view>
+        <scroll-view class="hospitals flex-column-centerAll" scroll-y="true">
+            <view class="hospital flex-row" wx:for="{{10}}" wx:key="item">
+                <view class="info flex-column-bothAlign">
+                    <view class="name"><van-icon name="hotel-o" color="#2A82E4" /> 浙江医院（三墩院区）</view>
+                    <view class="flex-row-bothAlign">
+                        <text class="type">三甲医院</text>
+                        <text class="classify">综合医院</text>
+                    </view>
+                    <text class="address">西湖区古墩路1229号</text>
+                </view>
+                <view class="lookDetail flex-column-centerAll" bindtap="lookHospitalDetail">
+                    <text>医院详情</text>
+                </view>
+            </view>
+        </scroll-view>
+    </view>
+</view>
+```
+然后是.js部分
+```js
+// index.js
+var minOffset = 30;//最小偏移量，低于这个值不响应滑动处理
+var minTime = 60;// 最小时间，单位：毫秒，低于这个值不响应滑动处理
+var startX = 0;//开始时的X坐标
+var startY = 0;//开始时的Y坐标
+var startTime = 0;//开始时的毫秒数
+ 
+Page({
+  data:{
+    markers:[
+        {
+          id:1,
+          longitude:120.22096505715056,
+          latitude:30.257772854411684,
+          width:48,
+          height:48,
+          iconPath:'../../static/index/location_fill.png'
+        }
+    ],
+    height:50
+  },
+  onLoad(e){
+    const res = wx.getSystemInfoSync()
+    this.setData({
+      panelTop:parseInt(res.windowHeight / 3) * 2,
+      windowHeight:res.windowHeight
+    })
+  },
+  tapMap(e){
+    let h = parseInt(this.data.windowHeight / 3)*2
+    this.setData({
+      panelTop:h
+    })
+  },
+  touchStart: function (e) {
+    startX = e.touches[0].pageX; // 获取触摸时的x坐标  
+    startY = e.touches[0].pageY; // 获取触摸时的x坐标
+    startTime = new Date().getTime();//获取毫秒数
+  },
+  touchCancel: function (e) {
+    startX = 0;//开始时的X坐标
+    startY = 0;//开始时的Y坐标
+    startTime = 0;//开始时的毫秒数
+  },
+  touchEnd: function (e) {
+    var endX = e.changedTouches[0].pageX;
+    var endY = e.changedTouches[0].pageY;
+    var touchTime = new Date().getTime() - startTime;
+    if (touchTime >= minTime) {
+      var xOffset = endX - startX;
+      var yOffset = endY - startY;
+      if (Math.abs(xOffset) < Math.abs(yOffset) && Math.abs(yOffset) >= minOffset) {
+        if (yOffset < 0 || (e.target.offsetTop>400)) {
+          this.setData({
+            height:80
+          })
+        } else {
+          this.setData({
+            height:50
+          })
+        }
+      }
+    }
+  },
+  lookHospitalDetail(){
+    wx.navigateTo({
+      url: '/pages/hospitalInfo/hospitalInfo',
+    })
+  }
+})
+```
+最后是.wxss部分
+```css
+.map{
+  width: 100vw;
+  transition: all .5s ease;
+}
+.panel{
+  width: 100vw;
+  background: white;
+  z-index: 99999;
+  box-shadow: 0 0 16rpx #b8b8b8, none, none, none;
+  transition: all .5s ease;
+  overflow: hidden; 
+  left:0;
+  bottom:0;
+  position:absolute;
+}
+.search{
+  box-shadow: 0 0 16rpx #b8b8b8;
+  height: 88rpx;
+  align-items: center;
+  padding: 32rpx;
+  border-radius: 50rpx;
+}
+.search input{
+  margin-left: 16rpx;
+  width: 100%;
+}
+.hospitals{
+  padding: 64rpx 32rpx 160rpx 32rpx;
+  margin-bottom: 64rpx;
+  height: 100%;
+  width: 100vw;
+}
+.hospitals .hospital{
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx;
+  height: 218rpx;
+  margin-bottom: 64rpx;
+  border-radius: 25rpx;
+  border: 1rpx solid #b8b8b8;
+}
+.hospitals .hospital:last-child{
+  margin-bottom: 0;
+}
+.hospital .info{
+  width: 70%;
+}
+.hospital .info,.hospital .lookDetail{
+  height: 100%;
+}
+.name{
+  font-size: 36rpx;
+  font-weight: bolder;
+}
+.type{
+  color: #D43030;
+}
+.lookDetail{
+  color: #2A82E4;
+}
+```
 ## 小程序踩坑记录【图片宽高数值问题----不能有小数】
 今天在用 picsum 进行瀑布流布局时踩坑了
 
