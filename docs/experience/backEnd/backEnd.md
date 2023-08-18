@@ -1,5 +1,6 @@
 ## Python Flask使用蓝图[python/flask/blueprint]
 使用示例：
+
 user.py
 ```python
 from utils.sql import supabase
