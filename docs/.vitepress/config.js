@@ -56,6 +56,6 @@ export default defineConfig({
         },
         aside:true,
         outline:'deep',
-        outlineTitle:"In Thie Page"
+        outlineTitle:"In This Page"
     }
 })
