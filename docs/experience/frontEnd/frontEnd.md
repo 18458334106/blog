@@ -1,3 +1,143 @@
+## el-upload 比较优雅的上传及回显方式[vue/elementui]
+直接上代码：
+```js
+<template>
+   <el-upload
+       accept=".jpg,.png,.bmp"
+       action="https://up-z0.qiniup.com"
+       list-type="picture-card"
+       :data="qiniuData"
+       :on-success="onSuccess"
+       :before-upload="beforeUpload"
+       :on-remove="handleRemove"
+       :file-list="fileList"
+       ref="files">
+            <i slot="default" class="el-icon-plus"></i>
+   </el-upload>
+</template>
+<script>
+import uploadApi from '@/api/upload'
+export default {
+  data(){
+    return {
+      qiniuData:{
+        key:'',
+        token:''
+      },
+      fileList:[]
+    }
+  },
+  created(){
+    //获取七牛云token
+    uploadApi.getToken().then(res => {
+      this.qiniuData.token = res.data
+    })
+  },
+  methods: {
+    beforeUpload(file) {
+      let testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
+      this.qiniuData.key = new Date().getTime(); // key为上传后文件名 必填
+      const extension =
+        testmsg === "jpg" ||
+        testmsg === "JPG" ||
+        testmsg === "png" ||
+        testmsg === "PNG" ||
+        testmsg === "bmp" ||
+        testmsg === "BMP";
+      const isLt50M = file.size / 1024 / 1024 < 10;
+      if (!extension) {
+        this.$message({
+          message: "上传图片只能是jpg / png / bmp格式!",
+          type: "error",
+        });
+        return false; //必须加上return false; 才能阻止
+      }
+      console.log(file);
+      if (!isLt50M) {
+        this.$message({
+          message: "上传文件大小不能超过 10MB!",
+          type: "error",
+        });
+        return false;
+      }
+      return extension || isLt50M;
+    },
+    // 图片上传成功
+    onSuccess(res, file) {
+      this.orgFormData.icon = `https://域名/${res.key}`
+    },
+    handleRemove(e) {
+      this.fileList=[]
+    },
+    add(){
+      this.fileList = []
+    },
+    edit(id){
+      //编辑时回显
+      this.$nextTick(()=>{
+        this.$refs.files.clearFiles()
+        this.fileList = []
+      })
+      this.fileList.push( { url:'这里填已经上传的图片url进行回显' } )
+    }
+  }
+}
+</script>
+```
+## vue 实现腾讯地图搜索选点功能（附加搜索联想功能）[vue/腾讯地图]
+注意：开发环境、正式环境需在腾讯地图配置ip地址白名单、域名白名单
+封装map组件：
+```js
+<template>
+    <iframe width="100%" style="border: none;width: 100%;height: 100%;" :src="map_src"></iframe>
+</template>
+  
+  <script>
+    export default {
+      data() {
+        return {
+          map_src: 'https://mapapi.qq.com/web/mapComponents/locationPicker/v/index.html?search=1&type=1&key=5U7BZ-AWLKU-HMRVX-2Y4EJ-TTD2J-Z5FCZ&referer=location',
+          form: {
+            //省市区ID
+            id_area: [
+              0,
+              0,
+              0
+            ],
+            address: '',
+            lng: '',
+            lat: '',
+          },
+          map_data: {
+            url: 'https://mapapi.qq.com/web/mapComponents/locationPicker/v/index.html?search=1&type=1&key=5U7BZ-AWLKU-HMRVX-2Y4EJ-TTD2J-Z5FCZ&referer=location',
+            address: '',
+            lng: '',
+            lat: '',
+          },
+        }
+      },
+      created() {
+        let that = this
+        window.addEventListener('message', function(event) {
+          // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+          var loc = event.data;
+          console.log(loc)
+          if (loc && loc.module == 'locationPicker') { //防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+            that.map_data.address = loc.poiaddress
+            that.map_data.lat = loc.latlng.lat
+            that.map_data.lng = loc.latlng.lng
+            //调用父组件方法并传值给父组件
+            that.$emit('chooseOrgAddr',that.map_data)
+          }
+        }, false);
+      }
+    }
+  </script>
+  
+  <style>
+  </style>
+```
+然后在用到的地方引入该组件，需要的数据在该组件中的map_data
 ## macOS 安装nvm方法【nvm/node】
 从github下载nvm仓库到 ~/目录  地址：https://github.com/nvm-sh/nvm.git 
 或者直接去该地址下载nvm的包
