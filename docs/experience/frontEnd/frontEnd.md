@@ -1,3 +1,216 @@
+## 纯前端vue实现图片上传七牛云[vue]
+首先安装下依赖：
+```js
+npm install qiniu-js crypto-js
+```
+然后封装一下 uploaderHelper.ts
+```ts
+import * as qiniu from 'qiniu-js';
+// @ts-ignore
+import CryptoJS from 'crypto-js'
+ 
+// 请求接口上传图片
+export function uploadFile(file: File) {
+    const uptoken = getToken('你的ak','你的sk','对应空间');
+    const key = file.name;
+    const config = {
+        useCdnDomain: true,
+        region: qiniu.region.z0,
+        forceDirect: true // 是否上传全部采用直传方式
+    };
+    const putExtra: any = {
+        fname: file.name,
+        mimeType: ['image/png', 'image/jpeg', 'image/gif']
+    };
+    return qiniu.upload(file, key, uptoken, putExtra, config);
+}
+// eslint-disable-next-line camelcase
+export default function getToken(access_key: string, secret_key: string, bucketname: string) {
+    // 构造策略
+    var putPolicy = {
+        "scope": bucketname,
+        "deadline": 3600 + Math.floor(Date.now() / 1000)
+    }
+    var encoded = base64Encode(utf16to8(JSON.stringify(putPolicy)));
+    var hash = CryptoJS.HmacSHA1(encoded, secret_key);
+    // 构造凭证
+    var encodedSign = hash.toString(CryptoJS.enc.Base64).replace(/\//g, '_').replace(/\+/g, '-');
+    // eslint-disable-next-line camelcase
+    var uploadToken = access_key + ':' + encodedSign + ':' + encoded;
+    return uploadToken;
+}
+function base64Encode(str: string) {
+    var out, i, len;
+    var c1, c2, c3;
+    len = str.length;
+    i = 0;
+    out = "";
+    var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    while (i < len) {
+        c1 = str.charCodeAt(i++) & 0xff;
+        if (i === len) {
+            out += base64EncodeChars.charAt(c1 >> 2);
+            out += base64EncodeChars.charAt((c1 & 0x3) << 4);
+            out += "==";
+            break;
+        }
+        c2 = str.charCodeAt(i++);
+        // eslint-disable-next-line eqeqeq
+        if (i === len) {
+            out += base64EncodeChars.charAt(c1 >> 2);
+            out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+            out += base64EncodeChars.charAt((c2 & 0xF) << 2);
+            out += "=";
+            break;
+        }
+        c3 = str.charCodeAt(i++);
+        out += base64EncodeChars.charAt(c1 >> 2);
+        out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+        out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+        out += base64EncodeChars.charAt(c3 & 0x3F);
+    }
+    return out;
+}
+function utf16to8(str: string) {
+    var out, i, len, c;
+    out = "";
+    len = str.length;
+    for (i = 0; i < len; i++) {
+        c = str.charCodeAt(i);
+        if ((c >= 0x0001) && (c <= 0x007F)) {
+            out += str.charAt(i);
+        } else if (c > 0x07FF) {
+            out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+            out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+            out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+        } else {
+            out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+            out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+        }
+    }
+    return out;
+}
+```
+然后对应上传图片的文件中引入该文件下的 uploadFile方法使用即可 ，使用方法如下：
+```js
+uploadFile(files[0]).subscribe({
+         next: (result) => {
+           console.log(result)
+         },
+         error: (err) => {
+           console.log(err)
+  
+         },
+         complete: (e) => {
+           //上传成功会返回数据
+           console.log(e)
+         }
+});
+```
+## Vue2Editor 图片上传及不允许粘贴图片[vue/vue2-editor]
+首先封装一下图片上传方法(纯前端)：
+```js
+import * as qiniu from 'qiniu-js'
+ 
+export function uploadFile(file,token) {
+    let fileNameLen = file.name.length;
+    let startPos = file.name.lastIndexOf(".");
+    //文件名
+    const key = new Date().getTime() + '_' + file.name.substring(startPos,fileNameLen);
+    const config = {
+        useCdnDomain: true,
+        region: qiniu.region.z0,
+        forceDirect: true // 是否上传全部采用直传方式
+    };
+    const putExtra = {
+        fname: file.name,
+        mimeType: ['image/png', 'image/jpeg', 'image/gif']
+    };
+    return qiniu.upload(file, key, token, putExtra, config);
+}
+```
+页面部分：
+```
+<template>
+    <VueEditor
+        :editorOptions="editorSettings"
+        v-model="actForm.detail"
+        useCustomImageHandler
+        @image-added="handleImageAdded">
+    </VueEditor>
+</template>
+```
+js部分：
+```
+<script>
+//引入刚刚封装好的方法
+import { uploadFile } from "@/utils/uploaderHelper.js"
+import VueEditor from "vue2-editor"
+    export default {
+        components:{
+          VueEditor
+        },
+        data(){
+            return{
+                detail:'',
+                editorImg: null,
+     		    editorUrl: null,
+                editorSettings:{
+                    modules:{
+                        clipboard:{
+                            matchers: [[Node.ELEMENT_NODE, this.handleCustomMatcher]]
+                        }
+                    }
+                }
+            }
+        },
+        created(){
+            //页面载入时调用后端接口获取一下上传token
+        },
+        methods:{
+            handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+                uploadFile(file,this.qiniuData.token).subscribe({
+                    next: (result) => {
+                        console.log(result);
+                    },
+                    error: (err) => {
+                        console.log(err)
+                    },
+                    complete: (e) => {
+                        this.editorImg = e.key;
+                        this.editorUrl = `https://域名/${this.editorImg}`
+                        Editor.insertEmbed(cursorLocation, "image", this.editorUrl);
+                        resetUploader();
+                    },
+                });
+            },
+            handleCustomMatcher(node, Delta) {
+                let ops = []
+                Delta.ops.forEach(op => {
+                    if (op.insert && typeof op.insert === 'string') {
+                        // 如果粘贴了图片，这里会是一个对象，所以可以这样处理
+                        ops.push({
+                            insert: op.insert,
+                        })
+                    }else{
+                        this.$message({
+                            message:'不允许粘贴图片,请手动上传',
+                            type:'warning'
+                        })
+                    }
+                })
+                Delta.ops = ops
+                return Delta
+            },
+ 
+        }
+    }
+</script>
+```
+下面是效果图地址：
+```
+  https://img-blog.csdnimg.cn/22273dbeaa964105ad445e83bf07deec.png
+```
 ## vue腾讯地图逆地址解析(经纬度到地名转换过程)[vue/腾讯地图Api]
 首先需要用jsonp插件，先安装下依赖
 ```
