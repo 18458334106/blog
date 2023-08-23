@@ -1,3 +1,35 @@
+## vue腾讯地图逆地址解析(经纬度到地名转换过程)[vue/腾讯地图Api]
+首先需要用jsonp插件，先安装下依赖
+```
+  npm install vue-jsonp
+```
+然后在main.js中引入并注册
+```js
+  import { VueJsonp  } from 'vue-jsonp'
+  Vue.use(VueJsonp) // $jsonp被挂载到vue原型上,可直接使用vm.$jsonp()
+```
+然后就可以使用了，在对应vue页面中添加如下方法
+```js
+getAreaCode(lat, lng) {
+  let that = this;
+  //这里可以直接this.$jsonp地址传入你的经纬度;
+  that.$jsonp("https://apis.map.qq.com/ws/geocoder/v1/?", {
+    location: `${lat},${lng}`, // 经纬度
+    key: '这里写你的腾讯地图应用的key', //这里就是要开启那个service不然会报错让你开启
+    output: "jsonp", // output必须jsonp 不然会超时
+  }).then((res) => {
+    if(res.status === 0){
+      this.actForm.areaCode = res.result.ad_info.adcode.substring(0,4) + '00'
+      console.log(this.actForm.areaCode);
+    }else{
+      this.$message.error(res.message)
+    }
+  }).catch(err=>{
+    this.$message.error("获取城市编码失败")
+  })
+}
+```
+返回的res中有具体的信息，可以根据需求使用
 ## el-upload 比较优雅的上传及回显方式[vue/elementui]
 直接上代码：
 ```js
