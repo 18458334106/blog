@@ -1,3 +1,16 @@
+## 使用devsidecar 软件解决 git因网络问题报错[dev-sideCar]
+上链接：
+```
+https://github.com/docmirror/dev-sidecar/releases
+```
+下载你系统对应的版本
+安装后根据教程设置即可
+解决了git提交、拉取时报以下错误：
+    1.Failed to connect to github.com port 443 after 21051 ms: Couldn't connect to server
+    2.Recv failure: Connection was reset
+————————————————
+版权声明：本文为CSDN博主「某公司摸鱼前端」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/weixin_59685936/article/details/132469797
 ## macOS安装git
 打开macOS终端  将下面的命令复制粘贴进去：
 ```

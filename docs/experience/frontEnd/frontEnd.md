@@ -1,3 +1,71 @@
+## vue2使用xlsx导出表格数据保存为表格文件[vue/xlsx/file-saver/axios]
+首先安装依赖：
+```
+npm install xlsx file-saver
+```
+封装 exportExcel.js 文件
+```js
+import FileSaver from 'file-saver';
+import XLSX from 'xlsx';
+export function exportToExcel(fliename, dom, that) {
+  const XLSX = require('xlsx');
+  console.log('XLSX', XLSX, FileSaver);
+  // 使用 this.$nextTick 是在dom元素都渲染完成之后再执行document.querySelector('#oIncomTable')
+  that.$nextTick(function() {
+    // 设置导出的内容是否只做解析，不进行格式转换     false：要解析， true:不解析
+    const xlsxParam = { raw: true };
+    const wb = XLSX.utils.table_to_book(dom, xlsxParam);
+    console.log(wb,"lkjdslkjflsdkaj");
+    // 导出excel文件名
+    let fileName = new Date().getTime() + '.xlsx';
+ 
+    const wbout = XLSX.write(wb, {
+      bookType: 'xlsx',
+      bookSST: true,
+      type: 'array'
+    });
+    try {
+      // 下载保存文件
+      FileSaver.saveAs(
+        new Blob([wbout], { type: 'application/octet-stream' }),
+        fileName
+      );
+    } catch (e) {
+      if (typeof console !== 'undefined') {
+        console.log(e, wbout);
+      }
+    }
+    return wbout;
+  });
+}
+```
+然后在调用的地方使用它，使用方法如下：
+```js
+<template>
+    <el-table id="elTable" :data="tableData">
+</template>
+<script>
+    import axios from 'axios'
+    import { exportToExcel } from "@/utils/exportExcel.js";
+    export default {
+        data(){
+            return{
+                listQuery:{
+                    page:1,
+                    pageSize:10
+                },
+                tableData:[],
+                total:0
+            }
+        },
+        methods:{
+            async exportData() {
+                exportToExcel('',document.querySelector('#actJoinDetail'),this)
+            }
+        }
+    }
+</script>
+```
 ## 纯前端vue实现图片上传七牛云[vue]
 首先安装下依赖：
 ```js
