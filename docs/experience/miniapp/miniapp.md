@@ -1,3 +1,27 @@
+## 微信小程序文件上传进度监听[微信小程序]
+直接上代码
+```js
+const uploadTask = wx.uploadFile({
+  url: 'http://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
+  filePath: tempFilePaths[0],
+  name: 'file',
+  formData:{
+    'user': 'test'
+  },
+  success (res){
+    const data = res.data
+    //do something
+  }
+})
+ 
+uploadTask.onProgressUpdate((res) => {
+  console.log('上传进度', res.progress)
+  console.log('已经上传的数据长度', res.totalBytesSent)
+  console.log('预期需要上传的数据总长度', res.totalBytesExpectedToSend)
+})
+ 
+uploadTask.abort() // 取消上传任务
+```
 ## 小程序富文本字符串处理方法[微信小程序/uni-app]
 封装方法：
 ```js
