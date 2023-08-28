@@ -3,7 +3,7 @@
 ```python
 pip install flask-jwt-extended
 ```
-然后在主应用中加入以下代码：
+然后在主应用中（项目入口文件）加入以下代码：
 ```python
 from flask import Flask
 from flask_jwt_extended import JWTManager #引入依赖
