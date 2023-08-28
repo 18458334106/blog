@@ -1,3 +1,60 @@
+## vue使用html2canvas生成图片以及图片转Base64 Base64转文件[vue/html2canvas/base64/file]
+首先安装依赖：
+```
+npm install html2canvas
+```
+封装文件，命名自定义就行
+```js
+import html2canvas from 'html2canvas';
+export const generateImage = (dom) => {
+    var canvas2 = document.createElement("canvas");
+    var wid= document.querySelector(dom);
+    var w = document.querySelector(dom).offsetWidth;
+    var h = document.querySelector(dom).offsetHeight;
+    canvas2.width = w;
+    canvas2.height = h;
+    //获得2维绘图的上下文
+    var ctx=canvas2.getContext("2d");
+    // 屏幕的设备像素比
+    var devicePixelRatio = window.devicePixelRatio || 1
+    // 浏览器在渲染canvas之前存储画布信息的像素比
+    var backingStoreRatio = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1
+    // canvas的实际渲染倍率
+    var ratio = devicePixelRatio / backingStoreRatio
+    ctx.scale(1*ratio, 1*ratio)
+    let res = html2canvas(document.querySelector(dom), { canvas: canvas2})
+    return res
+}
+ 
+/**
+ * dataurl: base64
+ * filename: 设置文件名称
+*/
+export const dataURLtoFile = (dataurl, filename) => {
+    let arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {
+      type: mime
+    });
+}
+// 图片转为base64格式
+export const imageToBase64 = (img) => {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+    var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+    var dataURL = canvas.toDataURL("image/jpeg" + ext);
+    return dataURL;
+};
+```
 ## vue2使用xlsx导出表格数据保存为表格文件[vue/xlsx/file-saver/axios]
 首先安装依赖：
 ```
