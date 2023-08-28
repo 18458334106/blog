@@ -1,3 +1,46 @@
+## Python Flask token身份认证[python/flask/flask_jwt_extended]
+首先安装依赖：
+```python
+pip install flask-jwt-extended
+```
+然后在主应用中加入以下代码：
+```python
+from flask import Flask
+from flask_jwt_extended import JWTManager #引入依赖
+app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'focusInYou' #jwt密钥 可自定义
+jwt = JWTManager(app) #实例化
+```
+user接口
+```python
+from flask import Blueprint,request, session
+from flask_jwt_extended import create_access_token, jwt_required ,get_jwt_identity #引入依赖
+user_bp = Blueprint('user', __name__, url_prefix='/user') #注册蓝图
+@user_bp.route('/login', methods=['POST'])
+def user_login():
+    reqJSONData = request.get_json(silent=True) #获取参数
+
+    if not reqJSONData: return r(code=401, msg='注册失败, 请求参数为空')
+    username = reqJSONData.get('username')
+    password = reqJSONData.get('password')
+
+    if not all([username, password]):
+        return r(code=401, msg='登录, 缺少请求参数')
+
+    #user = 去你的数据库里查出对应账号密码的用户信息赋值给user
+    # 4. 用户不存在, 直接返回
+    if not user:
+        return r(code=404, msg='用户名或密码错误')
+    else:
+        access_token = create_access_token(identity=user[0]) #创建token
+        session['user_info'] = user
+        return r(msg='登录成功', data={"token":access_token})
+@user_bp.route('/info', methods=['get'])
+@jwt_required() #修饰器，表示请求接口需要在请求头内加入 Authorization: Bearer xxxx
+def user_info():
+    userInfo = get_jwt_identity()
+    return r(msg='',data=userInfo)
+```
 ## Python Flask使用蓝图[python/flask/blueprint]
 使用示例：
 
