@@ -90,7 +90,7 @@ export const generateImage = (dom) => {
     // canvas的实际渲染倍率
     var ratio = devicePixelRatio / backingStoreRatio
     ctx.scale(1*ratio, 1*ratio)
-    let res = html2canvas(document.querySelector(dom), { canvas: canvas2})
+    let res = html2canvas(document.querySelector(dom), { canvas: canvas2,useCORS:true,allowTaint:true })
     return res
 }
  
