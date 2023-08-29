@@ -1,3 +1,41 @@
+## 前端下载图片方法及图片转base64[javascript]
+下载图片方法：
+```js
+export const download = (url) => {
+  let img = new Image();
+  img.src = url;
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    let canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img,0,0);
+    canvas.toBlob(function(blob) {
+      FileSaver.saveAs(blob, 'test.jpg');
+    });
+  }
+}
+```
+图片转base64：
+```js
+getImageFromUrl(url) {
+    return axios({
+      url,
+      method: 'get',
+      responseType: 'blob' // 指定响应数据的类型为 blob（二进制数据）
+    }).then(response => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(response.data);
+        return new Promise(resolve => {
+           fileReader.onload = () => {
+               const base64Data = fileReader.result;
+               resolve(base64Data);
+           };
+        });
+    });
+}
+```
 ## vue使用html2canvas生成图片以及图片转Base64 Base64转文件[vue/html2canvas/base64/file]
 首先安装依赖：
 ```
