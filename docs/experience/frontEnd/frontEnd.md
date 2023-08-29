@@ -1,3 +1,33 @@
+## vue使用html2canvas导出图片 网络图片跨域问题不显示解决方案[vue/js/html2canvas]
+只需要在img标签上加上 crossorigin="anonymous" 即可解决
+```html
+<img crossorigin="anonymous" :src="info.weappQrCode" alt="" style="border-radius: 50%;">
+```
+备用方法：
+```js
+自定义方法：
+getImageFromUrl() {
+    let url = this.info.weappQrCode
+    return axios({
+        url,
+        method: 'get',
+        responseType: 'blob'
+    }).then(response => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(response.data);
+        return new Promise(resolve => {
+            fileReader.onload = () => {
+            const base64Data = fileReader.result;
+            resolve(base64Data);
+        };
+    });
+  });
+}
+//需要用的地方使用它
+let base64 = await this.getImageFromUrl(this.info.weappQrCode)
+//将原来图片地址的字段替换为这个base64 就行
+//然后再尝试html2canvas
+```
 ## 前端下载图片方法及图片转base64[javascript]
 下载图片方法：
 ```js
