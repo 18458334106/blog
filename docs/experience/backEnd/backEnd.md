@@ -1,3 +1,51 @@
+## Python Flask swagger自动生成文档[python/flask/flask_siwadoc/pydantic]
+首先安装依赖：
+```python
+pip install flask_siwadoc pydantic
+```
+封装swagger.py文件，代码如下：
+```
+from flask_siwadoc import SiwaDoc
+siwa = SiwaDoc()
+```
+然后在主应用中（项目入口文件）加入以下代码：
+```python
+from flask import Flask
+from swagger import siwa #导入它
+app = Flask(__name__)
+siwa.init_app(app)
+```
+在user.py中加入以下代码：
+```python
+from flask import Blueprint,request, session
+from swagger import siwa #导入它
+from pydantic import BaseModel, Field
+user_bp = Blueprint('user', __name__, url_prefix='/user')
+class loginModel(BaseModel):
+    username:str=Field(...)
+    password:str=Field(...)
+@user_bp.route('/login', methods=['POST'])
+@siwa.doc(body=loginModel,tags=["user"])
+def user_login(body:loginModel):
+    reqJSONData = request.get_json(silent=True)
+    print(reqJSONData)
+    if not reqJSONData: return r(code=401, msg='登录失败, 请求参数为空')
+    username = reqJSONData.get('username')
+    password = reqJSONData.get('password')
+
+    if not all([username, password]):
+        return r(code=401, msg='登录, 缺少请求参数')
+
+    user = supabase.table('sys_user').select('id,username,name').eq('username',username).eq('password',password).execute().data
+    # 4. 用户不存在, 直接返回
+    if not user:
+        return r(code=404, msg='用户名或密码错误')
+    else:
+        access_token = create_access_token(identity=user[0])
+        session['user_info'] = user
+        return r(msg='登录成功', data={"token":access_token})
+```
+启动服务，默认在5000端口，访问http://127.0.0.1:5000/docs
 ## Python Flask token身份认证[python/flask/flask_jwt_extended]
 首先安装依赖：
 ```python
