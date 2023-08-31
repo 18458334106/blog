@@ -49,6 +49,8 @@ def user_info():
     else:
         return r(msg='',data=userInfo)
 ```
+运行项目，
+访问：http://127.0.0.1:5000/apidocs/
 ## Python Flask swagger自动生成文档（插件存在版本兼容问题，部署会出问题！不推荐）[python/flask/flask_siwadoc/pydantic]
 首先安装依赖：
 ```python
