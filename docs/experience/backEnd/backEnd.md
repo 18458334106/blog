@@ -1,4 +1,55 @@
-## Python Flask swagger自动生成文档[python/flask/flask_siwadoc/pydantic]
+## Python Flask flasgger api文档[python/flask/flasgger]
+首先需要安装依赖：
+```python
+pip install flasgger
+```
+封装swagger.py文件，代码如下：
+```python
+from flasgger import Swagger
+swagger = Swagger()
+```
+然后在主应用中（项目入口文件）加入以下代码：
+```python
+from flask import Flask 
+from swagger import Swagger #导入封装好的swagger.py文件中的Swagger对象
+# 创建 Flask 实例
+app = Flask(__name__)
+Swagger(app) 
+```
+然后在user.py文件中加入以下代码：
+```python
+#举例
+@user_bp.route('/info', methods=['GET'])
+def user_info():
+    """获取用户信息
+        ---
+        parameters:
+          - name: Authorization
+            in: header
+            required: true
+            description: 用户token
+            type: string
+        responses:
+          200:
+            description: 成功
+            schema:
+              properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+                data:
+                  type: object
+          401:
+            description: 失败
+        """
+    userInfo = get_jwt_identity()
+    if not userInfo:
+        return r(msg='暂未登录')
+    else:
+        return r(msg='',data=userInfo)
+```
+## Python Flask swagger自动生成文档（插件存在版本兼容问题，部署会出问题！不推荐）[python/flask/flask_siwadoc/pydantic]
 首先安装依赖：
 ```python
 pip install flask_siwadoc pydantic
