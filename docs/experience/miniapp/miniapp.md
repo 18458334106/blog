@@ -1,5 +1,5 @@
 ## 微信小程序用户隐私保护指引弹窗组件[uniapp]
-```js
+```html
 
 <template>
 	<view v-if="showPrivacy" :class="privacyClass">
@@ -199,6 +199,16 @@
 	}
 </style>
 
+```
+然后在用到的页面进行引入
+```html
+<template>
+	<popup ref="privacyComponent" position="bottom"  />
+</template>
+ 
+<script setup>
+	import popup from '/components/privacy-popup.vue'
+</script>
 ```
 ## 微信小程序文件上传进度监听[微信小程序]
 直接上代码
