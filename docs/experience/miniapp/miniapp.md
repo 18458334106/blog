@@ -55,7 +55,7 @@
 				wx.getPrivacySetting({
 					success: (res) => {
 						console.log(res, 'getPrivacySetting');
-						if (!res.needAuthorization) {
+						if (res.needAuthorization) {
 							this.privacyContractName = res.privacyContractName;
 							this.showPrivacy = true;
 						}
