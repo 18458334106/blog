@@ -1,3 +1,22 @@
+## 在Vite中使用require引入资源[vite/require]
+安装依赖
+```js
+npm i vite-plugin-require-transform --save-dev
+```
+vite.config.ts中配置：
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import requireTransform from 'vite-plugin-require-transform';
+export default defineConfig({
+  plugins: [
+    vue(),
+    requireTransform({
+      fileRegex: /.js$|.vue$|.png$|.ts$|.jpg$/
+    }) //配置require
+  ]
+})
+```
 ## Vue使用 jsonP插件 进行跨域访问
 首先安装依赖
 ```
