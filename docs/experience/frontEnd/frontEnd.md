@@ -1,3 +1,36 @@
+## Vue使用 jsonP插件 进行跨域访问
+首先安装依赖
+```
+  npm install vue-jsonp
+```
+然后在main.js中引入并注册
+```js
+  import { VueJsonp  } from 'vue-jsonp'
+  Vue.use(VueJsonp) // $jsonp被挂载到vue原型上,可直接使用vm.$jsonp()
+```
+然后使用this.$jsonp()方法即可
+```js
+  this.$jsonp(url, {
+    // 请求参数
+  }).then(res=>{
+
+  })
+```
+## Vercel.json配置vue项目路由重定向（重写）【vercel/Vue2、Vue3/vercel.json】
+在项目根目录创建vercel.json文件，添加如下配置
+```json
+{
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/"
+      }
+    ]
+}
+```
+vue-router 路由模式改为 
+        history（vue2版本）
+        createWebHistory（vue3版本）
 ## vue使用html2canvas导出图片 网络图片跨域问题不显示解决方案[vue/js/html2canvas]
 只需要在img标签上加上 crossorigin="anonymous" 即可解决
 ```html
