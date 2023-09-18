@@ -21,6 +21,10 @@ const sidebar = {
                             link: '/experience/miniapp/miniapp'
                         },
                         {
+                            text: 'github',
+                            link: '/experience/github/github'
+                        },
+                        {
                             text: 'git',
                             link: '/experience/git/git'
                         }
