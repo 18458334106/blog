@@ -1,3 +1,27 @@
+## react 跨域的两种方法[react/http-proxy-middleware]
+第一种：
+    react简单解决跨域可以直接在 package.json 中添加 proxy 属性
+第二种：
+    安装依赖
+```js
+npm install http-proxy-middleware
+```
+在 src 目录下新建 setupProxy.js
+```js
+const { createProxyMiddleware } = require("http-proxy-middleware");
+module.exports = function (app) {
+    app.use(
+        "/api",
+        createProxyMiddleware({
+            target: "http://localhost:3000", // 后台服务地址以及端口号
+            changeOrigin: true, // 是否开启代理
+            pathRewrite: {
+                "/api": "", // 代理名称
+            },
+        })
+    );
+};
+```
 ## 在Vite中使用require引入资源[vite/require]
 安装依赖
 ```js
