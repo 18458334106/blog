@@ -1,3 +1,48 @@
+## el-table + sortablejs拖拽排序[elementui/sortablejs]
+首先安装依赖：
+```js
+npm install sortablejs
+```
+在用到的页面中引入：
+```js
+import Sortable from "sortablejs";
+```
+页面部分：
+ref、row-key必须设置
+ref是为了获取到表格dom元素  row-key是为了排序需要
+```html
+<el-table :data="tableData" ref="singleTable" highlight-current-row border row-key="stepsId" class="load_table">
+   <el-table-column prop="stepsId"  width="50" label="编号" align="center"></el-table-column>
+   <el-table-column prop="name"  width="50" label="姓名" align="center" prop="index"></el-table-column>
+</el-table>
+```
+然后加入对应方法：
+```js
+mounted(){//页面挂在完成触发
+  this.dragSort();
+},
+//表格拖动排序
+dragSort() {
+  const el = this.$refs.singleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+  this.sortable = Sortable.create(el, {
+      ghostClass: 'sortable-ghost',
+      setData: function (dataTransfer) {
+         dataTransfer.setData('Text', '')
+      },
+      onEnd: e => {
+      //e.oldIndex为拖动一行原来的位置，e.newIndex为拖动后新的位置
+      const targetRow = this.stepsList.splice(e.oldIndex, 1)[0];
+      this.stepsList.splice(e.newIndex, 0, targetRow);
+      var stepsIdArr = [];//重组合后的id循序
+      this.stepsList.forEach(x=>{
+           stepsIdArr.push(x.stepsId);
+      })
+      //更改排序号接口
+                
+      }
+  })
+},
+```
 ## react 跨域的两种方法[react/http-proxy-middleware]
 第一种：
     react简单解决跨域可以直接在 package.json 中添加 proxy 属性
