@@ -1,3 +1,97 @@
+## 解决 el-tree setChecked 方法偶尔失效的方法
+目前在大多数公司中，菜单的权限控制都是不可或缺的功能
+
+在和后端配合做权限控制的时候不可避免的会用到  el-tree
+
+然而这个组件本身带的坑不少
+
+我们需要回显对应角色拥有的菜单，在不严格的模式下，父节点的选中会连带子节点的选中
+
+如果 ，你使用的  setCheckedKeys  ，那么你的回显一定是不正确的
+
+此时不得不用到另一个方法  setChecked   ，然后你会发现dom 刷新的时候   这个方法又失效了
+
+原因是：dom树刷新了 ，使得树节点对应的treeId刷新了  
+
+解决方法如下：在调用setChecked的方法外边包一层延时器（setTimeout）即可解决
+```js
+<template>
+  <div class="app-container">
+    <el-dialog title="权限管理" :visible.sync="menuRelationVis">
+      <el-tree ref="menuTreeRef" 
+        :data="menuTreeData"
+        node-key="id"
+        show-checkbox
+        :props="{label:'name',children:'children',isLeaf:'leaf'}">
+      </el-tree>
+      <br>
+      <div style="display: flex;justify-content: center;">
+        <el-button @click="menuRelationVis = false">取消</el-button>
+        <el-button type="primary" @click="submitMenuRelation">确认</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+ 
+<script>
+  import rolesApi from '@/api/roles.js'
+  export default {
+      data(){
+          return{
+              menuRelationVis:false,
+              curRoleId:null,
+              menuTreeData:[]
+          }
+      },
+      methods:{
+          async menuManage(id){
+              this.menuRelationVis = true
+              this.curRoleId = id
+              await this.getMenuTreeData()
+              await this.getHasMenuByRoleId(id)
+          },
+          getHasMenuByRoleId(id){
+              rolesApi.queryRoleElement({roleId:id}).then(res=>{
+                  if(res.code === 0){
+                      console.log(this.$refs.menuTreeRef);
+                      res.data.forEach(val => {
+                          let a = setTimeout(()=>{
+                              this.$nextTick(() => {
+                                  this.$refs.menuTreeRef.setChecked(val, true, false)
+                                  clearTimeout(a)
+                                  console.log('setChecked');
+                              })
+                              this.$forceUpdate()
+                          },100)
+                      })
+                  }else{
+                      this.$message.error(res.msg)
+                  }
+              }).catch(err=>{
+                  this.$message.error('查询角色权限信息失败')
+              })
+          },
+          submitMenuRelation(){
+              let checkKeys = this.$refs.menuTreeRef.getCheckedKeys()
+              let halfCheckKeys = this.$refs.menuTreeRef.getHalfCheckedKeys()
+              rolesApi.relatedElement({
+                  roleId: this.curRoleId,
+                  elementIds: checkKeys.concat(halfCheckKeys)
+              }).then(res=>{
+                  if(res.code === 0){
+                      this.menuRelationVis = false
+                      this.$message.success('修改角色权限成功')
+                  }else{
+                      this.$message.error(res.msg)
+                  }
+              }).catch(err=>{
+                  this.$message.error('修改角色权限失败')
+              })
+          }
+      }
+  }
+</script>
+```
 ## el-table + sortablejs拖拽排序[elementui/sortablejs]
 首先安装依赖：
 ```js
