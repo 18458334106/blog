@@ -1,3 +1,17 @@
+## Vue2打包自定义文件命名规则&CDN部署前端项目[vue2/七牛云/CDN部署前端项目]
+当前公司的服务器带宽较低 将项目全部打包后部署至服务器加载时间比较长
+于是就打算将静态资源文件上传至七牛云  每次只把打包后dist目录下的index.html更新至服务器
+然后必须要把vue.config.js的  publicPath  替换为对应的七牛云cdn地址
+但是有缓存的问题  导致重新打包上传后cdn缓存问题导致页面不是最新的
+解决方案如下：
+在  vue.config.js  中找到  chainWebpack  方法：在方法里面添加下列代码：
+```js
+config.output.filename(`static/js/[hash].[name].${new Date().getTime()}.js`).end();
+config.output.chunkFilename('static/js/[hash].[name].' + new Date().getTime() + '.js').end()
+```
+意思是：
+设置打包时的js文件指纹为  哈希值  +   时间戳  的方式
+至于上传静态资源的方法  可以是手动上传  也可以是脚本上传
 ## 推荐一个假数据后端接口网站
 ```js
 https://dummyjson.com/
