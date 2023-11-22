@@ -9,13 +9,13 @@ hero:
       link: /experience/
 features:
   - title: MobilePhone
-    details: "19857191790"
+    details: "18458334106"
   - title: WeChat
     details: "1985791790"
   - title: WeChatMiniProgram
-    details: 我正在尝试插入图片
+    details: FilesUploadHelper
 footer:
-  - text: 19857191790
+  - text: 18458334106
 ---
 <style>
   :root {

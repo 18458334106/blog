@@ -44,7 +44,7 @@ export default defineConfig({
             {text:'Experience',link:'/experience/'},
             {text:'About',link:'/about'},
             {text:'Gitee',link:'https://gitee.com/zhaojc-077399'},
-            {text:'GitHub',link:'https://github.com/19857191790/blog'},
+            {text:'GitHub',link:'https://github.com/18458334106/blog'},
             {text:'CSDN',link:'https://blog.csdn.net/weixin_59685936?type=blog'}
         ],
         sidebar:sidebar,
